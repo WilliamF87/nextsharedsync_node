@@ -54,7 +54,7 @@ correr comando "git init" en cdm (carpeta backend)
 Seguir los pasos que marca git:
 
 git add .
-git commit -m "primer commit"
+git commit -m "Se sube el proyecto a gitHub"
 git branch -M main
 git remote add origin https://github.com/WilliamF87/nextsharedsync_node.git
 git push -u origin main
