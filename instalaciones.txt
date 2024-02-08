@@ -73,6 +73,20 @@ luego usar comandos:
 Por ultimo configurar las variables en settings
 
 
+{
+    "builds": [
+        {
+            "src": "./index.js"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        }
+    ]
+}
+
 
 
 
