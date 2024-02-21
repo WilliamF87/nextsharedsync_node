@@ -1,6 +1,6 @@
 import multer from "multer";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import path, { dirname } from "path";
 import shortid from "shortid";
 import fs from "fs";
 import Enlace from "../models/Enlace.js";
@@ -9,17 +9,20 @@ import Carpeta from "../models/Carpeta.js";
 import mongoose from "mongoose";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename + '/../uploads');
+const __dirname = dirname(__filename);
+
 
 const subirArchivo = async (req, res, next) => {
-
+    
     const folderAnonimo = 'YyjQ4g2es';
 
-    let folderPath = __dirname + `/../uploads/${folderAnonimo}`;
+    let folderPath = path.join(__dirname, "..", "uploads", folderAnonimo);
+    console.log("folderAnonino: " + folderPath);
     
     if(req.usuario) {
         const carpeta = await Carpeta.findOne({ usuario: mongoose.Types.ObjectId(req.usuario.id) });
-        folderPath = __dirname + `/../uploads/${carpeta.nombre}`;
+        folderPath = path.join(__dirname, "..", "uploads", carpeta.nombre);
+        console.log("folderUsuario: " + folderPath);
     }
   
     if(!fs.existsSync(folderPath)) {
@@ -45,10 +48,10 @@ const subirArchivo = async (req, res, next) => {
         storage: fileStorage
     }
 
+    
     const upload = multer(configMulter).single('archivo');
-
+    
     upload(req, res, async error => {
-
         if(!error) {
             res.json({ archivo: req.file.filename });
         } else {

@@ -35,7 +35,12 @@ const historialArchivo = async (req, res) => {
     res.json({ historialArchivo: historial })
 }
 
+const prueba = (req, res) => {
+    return res.json({ prueba: "Funcionando correctamente..." })
+}
+
 export {
     historialArchivo,
-    historialUsuario
+    historialUsuario,
+    prueba
 }
