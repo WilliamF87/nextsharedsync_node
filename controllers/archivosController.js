@@ -22,7 +22,6 @@ const subirArchivo = async (req, res, next) => {
     if(req.usuario) {
         const carpeta = await Carpeta.findOne({ usuario: mongoose.Types.ObjectId(req.usuario.id) });
         folderPath = path.join(__dirname, "..", "uploads", carpeta.nombre);
-        console.log("folderUsuario: " + folderPath);
     }
   
     if(!fs.existsSync(folderPath)) {
@@ -111,12 +110,11 @@ const registrarDescarga = async (req, res, next) => {
     }
 
     const registroDescarga = async () => {
-        const { descargas, nombre, _id } = enlace;
+        const { descargas } = enlace;
     
-        // Si las descargas son iguales a 1: marcar enlace como completado y borrar el archivo
+        // Si las descargas son iguales a 1: borrar el archivo
         if(descargas === 1) {
             enlace.descargas--;
-            // enlace.completado = true;
             await enlace.save();
 
             next();
@@ -126,7 +124,15 @@ const registrarDescarga = async (req, res, next) => {
         }
     }
 
-    if(historial && req.usuario?.id !== historial.enlace.autor.toString()) {
+    // TODO: eliminar todos los console.log y revisar en backend y frontend el problema del número de descargas en usuarios anónimos
+
+    if(historial.enlace.autor === null) {
+        console.log("Archivo anónimo")
+        await registroDescarga();
+    }
+
+    if(historial && historial.enlace.autor !== null && req.usuario?.id !== historial.enlace.autor.toString()) {
+        console.log("Archivo de úsuario")
         await registroHistorial();
 
         await registroDescarga();
