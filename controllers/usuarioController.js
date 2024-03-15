@@ -45,7 +45,6 @@ const nuevoUsuario = async (req, res) => {
 const asignarCarpeta = async (email) => {
     let carpeta = new Carpeta();
     carpeta.nombre = shortid.generate();
-    // carpeta.nombre = "YyjQ4g2es"; Crear carpeta de usuarios anónimos 
 
     try {
         const usuario = await Usuario.findOne({ email });
