@@ -66,6 +66,18 @@ const asignarCarpeta = async (usuario, enlace) => {
         carpeta = await Carpeta.findOne({ usuario: mongoose.Types.ObjectId(usuario.id) });
     } else {
         carpeta = await Carpeta.findOne({ nombre: "YyjQ4g2es" });
+
+        if(!carpeta) {
+            let carpetaAnonima = new Carpeta();
+            carpetaAnonima.nombre = "YyjQ4g2es";
+
+            try {
+                const respuesta = await carpetaAnonima.save();
+                carpeta = respuesta;
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 
     let urlEnlaces = carpeta.urlEnlaces;
