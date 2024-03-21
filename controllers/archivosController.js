@@ -83,15 +83,15 @@ const descargar = async (req, res) => {
     const rutaOriginal = `${__dirname}/../uploads/${carpeta}/${archivo}`;
 
     // Crear un flujo de lectura desde el archivo original
-    const readStream = fs.createReadStream(rutaOriginal);
+    // const readStream = fs.createReadStream(rutaOriginal);
 
-    // Configurar el encabezado para la respuesta de descarga con el nuevo nombre
-    res.setHeader('Content-disposition', `attachment; filename="${nombreOriginal}"`);
+    // // Configurar el encabezado para la respuesta de descarga con el nuevo nombre
+    // res.setHeader('Content-disposition', `attachment; filename="${nombreOriginal}"`);
 
-    // Pipe (conectar) el flujo de lectura al flujo de escritura de la respuesta
-    readStream.pipe(res);
+    // // Pipe (conectar) el flujo de lectura al flujo de escritura de la respuesta
+    // readStream.pipe(res);
 
-    // res.download(rutaOriginal);
+    res.download(rutaOriginal);
     // res.send: sirve para enviar una vista html
 }
 
