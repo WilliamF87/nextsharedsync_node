@@ -72,17 +72,26 @@ const eliminarArchivo = async (req, res) => {
 
 const descargar = async (req, res) => {
     // Obtener el enlace
-    const { carpeta, archivo } = req.params;
+    const { carpeta, archivo, nombreOriginal } = req.params;
+    
     const enlace = await Enlace.findOne({ nombre: archivo });
-    if(!enlace) {
-        // console.log("El enlace no existe")
+    if(!enlace || !enlace.descargas > 0) {
         return res.status(404).send("El enlace no existe");
     }
-    
-    // Ruta exacta del archivo
-    const archivoDescarga = `${__dirname}/../uploads/${carpeta}/${archivo}`;
 
-    res.download(archivoDescarga);
+    // Ruta exacta del archivo original
+    const rutaOriginal = `${__dirname}/../uploads/${carpeta}/${archivo}`;
+
+    // Crear un flujo de lectura desde el archivo original
+    const readStream = fs.createReadStream(rutaOriginal);
+
+    // Configurar el encabezado para la respuesta de descarga con el nuevo nombre
+    res.setHeader('Content-disposition', `attachment; filename="${nombreOriginal}"`);
+
+    // Pipe (conectar) el flujo de lectura al flujo de escritura de la respuesta
+    readStream.pipe(res);
+
+    // res.download(rutaOriginal);
     // res.send: sirve para enviar una vista html
 }
 
@@ -111,19 +120,18 @@ const registrarDescarga = async (req, res, next) => {
     const registroDescarga = async () => {
         const { descargas } = enlace;
     
-        // Si las descargas son iguales a 1: borrar el archivo
-        if(descargas === 1) {
+        if(descargas > 0) {
             enlace.descargas--;
             await enlace.save();
-
-            next();
-        } else {
-            enlace.descargas--;
-            await enlace.save();
+    
+            // Si las descargas son iguales a 1: borrar el archivo
+            if(descargas === 1) {
+                next();
+            }
         }
     }
 
-    if(historial.enlace.autor === null) {
+    if(!historial || !historial?.enlace.autor) {
         await registroDescarga();
     }
 

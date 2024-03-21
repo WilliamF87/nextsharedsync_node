@@ -9,7 +9,7 @@ router.post('/',
     subirArchivo
 );
 
-router.get('/:carpeta/:archivo',
+router.get('/:carpeta/:archivo/:nombreOriginal',
     descargar
 );
 

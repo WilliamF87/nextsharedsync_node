@@ -49,7 +49,9 @@ const nuevoEnlace = async (req, res, next) => {
     
         const carpeta = await asignarCarpeta(req.usuario, enlaceGuardado);
 
-        nuevoHistorial(enlace.url);
+        if(req.usuario) {
+            nuevoHistorial(enlace.url);
+        }
 
         res.json({url: enlace.url, carpeta: carpeta});
         return next();
@@ -114,7 +116,6 @@ const obtenerEnlace = async (req, res, next) => {
     next();
 }
 
-// TODO: revisar si este metodo se está usando y verificar el select
 const todosEnlaces = async (req, res) => {
     try {
         // -todos los anlaces (solo su url)
